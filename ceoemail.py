@@ -30,16 +30,12 @@ browser = webdriver.Firefox()
 browser.get(args.url)
 html = browser.page_source.encode('ascii', 'xmlcharrefreplace')
 soup = bs(html)
-#for link in soup.findAll('a', href=True):
-#links = browser.find_elements_by_tag_name('a')
-#link_urls = [link.get_attribute('href') for link in links]
-#for url in link_urls:
-#	if 's.php?id=ceo' in url:
-		#browser.get(url)
-		#source = browser.page_source.encode('ascii', 'xmlcharrefreplace')
-		#print source
-links = browser.find_element_by_xpath('//a[contains(@href, "%s")]' % 's.php?id=ceo')
+links = browser.find_elements_by_xpath('//a[contains(@href, "%s")]' % 's.php?id=ceo')
 for link in links:
 	print link.get_attribute('href')
+	browser.implicitly_wait(30)
 	link.click()
+	source = browser.page_source.encode('ascii', 'xmlcharrefreplace')
+	print source
+	browser.get(args.url)
 browser.quit()
