@@ -30,6 +30,7 @@ def FixProxy():
 parser = argparse.ArgumentParser(description='Scrape ceoemail')
 parser.add_argument('-p', '--proxy', type=str, required=True)
 parser.add_argument('-t', '--port', type=str, required=True)
+parser.add_argument('-l', '--loop', type=str, required=True)
 parser.add_argument('-u', '--url', type=str, required=True)
 args = parser.parse_args()
 print "Args loaded"
@@ -56,14 +57,15 @@ elements = browser.find_elements_by_xpath('//a[contains(@href, "%s")]' % 's.php?
 for counter in range(counter, len(elements)):
 	elements = browser.find_elements_by_xpath('//a[contains(@href, "%s")]' % 's.php?id=ceo')
 	print elements[counter].get_attribute('href')
-	elements[counter].click()
-	source = browser.page_source.encode('ascii', 'xmlcharrefreplace')
-	if "if you are using this site in relation to your work or you are seeking lists of email addresses please" not in source:
-		print source
-	if "mailto" in source:
-		print source
+	if args.loop > counter: 
+		elements[counter].click()
+		source = browser.page_source.encode('ascii', 'xmlcharrefreplace')
+		if "mailto" in source:
+			print source
+		else:
+			print "Failed ",counter," Proxy: ",args.proxy," URL: ",elements[counter]
 	else:
-		print "Failed ",counter," Proxy: ",args.proxy," URL: ",elements[counter]
+		print "Skipped ",counter
 	browser.back()
 	time.sleep(5)
 browser.quit()
