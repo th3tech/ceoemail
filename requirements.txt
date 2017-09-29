@@ -1,0 +1,5 @@
+HTMLParser
+xvfbwrapper
+selenium
+BeautifulSoup
+pyvirtualdisplay
